@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IF Entertainment</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#e50914;--red-dark:#b00710;
+  --bg:#141414;--bg2:#1c1c1c;--bg3:#252525;
+  --text:#fff;--muted:#aaa;--dim:#666;--border:#2e2e2e;
+}
+html{font-size:14px}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#444;border-radius:2px}
+
+.page{display:grid;grid-template-columns:1fr 264px;grid-template-rows:56px 1fr auto}
+
+/* NAV */
+nav{
+  grid-column:1/-1;grid-row:1;
+  display:flex;align-items:center;gap:28px;
+  padding:0 24px;height:56px;
+  background:#0a0a0a;border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200
+}
+.logo{display:flex;align-items:center;gap:3px;text-decoration:none;color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:20px;white-space:nowrap}
+.logo .ib{background:var(--red);padding:2px 6px;font-size:18px;line-height:1.1}
+.nav-links{display:flex;gap:6px;flex:1}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;padding:6px 10px;border-radius:4px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.06)}
+.nav-links a.active{color:var(--text);background:rgba(229,9,20,.15);border-bottom:2px solid var(--red)}
+.nav-right{display:flex;align-items:center;gap:12px;margin-left:auto}
+.search-wrap{position:relative}
+.search-wrap input{background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:12px;padding:6px 32px 6px 10px;width:0;transition:width .3s,border-color .2s;outline:none;cursor:pointer}
+.search-wrap input.open{width:180px;cursor:text;border-color:#555}
+.search-wrap input::placeholder{color:var(--dim)}
+.search-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;padding:0;display:flex}
+.search-btn:hover{color:var(--text)}
+.icon-btn{background:none;border:none;color:var(--muted);cursor:pointer;display:flex;padding:4px;border-radius:4px;transition:color .15s,background .15s;position:relative}
+.icon-btn:hover{color:var(--text);background:rgba(255,255,255,.07)}
+.notif-dot{position:absolute;top:3px;right:3px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid #0a0a0a}
+.user-btn{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 8px;border-radius:4px;transition:background .15s;background:none;border:none;color:var(--text)}
+.user-btn:hover{background:rgba(255,255,255,.07)}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.uinfo{text-align:left}
+.uname{font-size:12px;font-weight:600;line-height:1.2}
+.urole{font-size:10px;color:var(--dim)}
+
+/* MAIN */
+.main{grid-column:1;grid-row:2;overflow:hidden}
+
+/* HERO */
+.hero{position:relative;height:420px;overflow:hidden;background:#000;cursor:grab}
+.hero:active{cursor:grabbing}
+.slides{display:flex;width:300%;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.slide{flex:0 0 calc(100%/3);height:100%;position:relative;overflow:hidden}
+.slide-bg{position:absolute;inset:0;background:#111}
+.slide-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.88) 35%,rgba(0,0,0,.15) 100%);z-index:1}
+.slide-art{position:absolute;right:0;bottom:0;top:0;width:65%;z-index:0;overflow:hidden}
+.slide-art img,
+.slide-art video{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.slide-content{position:absolute;left:40px;top:50%;transform:translateY(-50%);z-index:2;max-width:420px}
+.slide-badge{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.slide-badge .n-letter{color:var(--red);font-weight:900;font-style:italic;font-size:22px;line-height:1}
+.slide-badge span{color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+.slide-title{font-family:'Bebas Neue',sans-serif;font-size:54px;line-height:1;margin-bottom:4px;letter-spacing:.5px}
+.slide-sub{color:var(--red);font-style:italic;font-size:20px;font-weight:600;margin-bottom:14px}
+.slide-desc{color:#ccc;font-size:13px;line-height:1.6;margin-bottom:22px}
+.hero-btns{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.btn-play{display:flex;align-items:center;gap:7px;background:#fff;color:#000;border:none;border-radius:4px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s}
+.btn-play:hover{background:#ddd}
+.btn-play:active{transform:scale(.97)}
+.btn-list{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s,transform .1s}
+.btn-list:hover{background:rgba(255,255,255,.25)}
+.btn-list:active{transform:scale(.97)}
+.btn-info{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:4px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s,transform .1s}
+.btn-info:hover{background:rgba(255,255,255,.16)}
+.hero-credit{font-size:11px;color:var(--muted)}
+.hero-credit .cr{color:var(--red);font-weight:600}
+.hero-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:38px;height:38px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,transform .15s;color:#fff}
+.hero-nav:hover{background:rgba(229,9,20,.7);transform:translateY(-50%) scale(1.08)}
+.hero-nav.prev{left:14px}
+.hero-nav.next{right:14px}
+.hero-dots{position:absolute;bottom:16px;left:40px;display:flex;gap:7px;z-index:10}
+.dot{width:28px;height:3px;border-radius:2px;background:rgba(255,255,255,.28);cursor:pointer;transition:background .25s,width .25s}
+.dot.active{background:var(--red);width:36px}
+.hero-progress{position:absolute;bottom:0;left:0;height:2px;background:var(--red);transition:width .1s linear;z-index:10}
+
+/* CONTENT */
+.content{padding:0 24px 40px}
+.section{margin-bottom:32px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-title{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700}
+.sec-title::before{content:'';display:block;width:3px;height:20px;background:var(--red);border-radius:2px}
+.view-all{display:flex;align-items:center;gap:4px;color:var(--muted);font-size:12px;text-decoration:none;padding:5px 10px;border-radius:4px;border:1px solid var(--border);transition:color .15s,background .15s}
+.view-all:hover{color:var(--text);background:rgba(255,255,255,.06);border-color:#555}
+
+/* MOVIE ROW */
+.row-wrap{position:relative}
+.movie-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scroll-behavior:smooth;scrollbar-width:none}
+.movie-row::-webkit-scrollbar{display:none}
+.row-btn{position:absolute;top:50%;transform:translateY(-60%);width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.8);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;color:#fff;transition:background .15s,transform .15s}
+.row-btn:hover{background:var(--red);transform:translateY(-60%) scale(1.08)}
+.row-btn.rb-left{left:-12px}
+.row-btn.rb-right{right:-12px}
+
+/* CARDS */
+.card{flex-shrink:0;width:138px;cursor:pointer;transition:transform .2s}
+.card:hover{transform:scale(1.05)}
+.card:hover .c-overlay{opacity:1}
+.card.lg{width:158px}
+.thumb{width:138px;height:198px;border-radius:6px;overflow:hidden;position:relative;margin-bottom:7px;background:var(--bg3);border:1px solid var(--border)}
+.card.lg .thumb{width:158px;height:212px}
+.thumb img,
+.thumb video{width:100%;height:100%;object-fit:cover;display:block;border-radius:6px}
+.c-overlay{position:absolute;inset:0;background:rgba(0,0,0,.42);opacity:0;transition:opacity .2s;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:8px;flex-direction:column}
+.play-circle{width:42px;height:42px;border-radius:50%;background:rgba(229,9,20,.9);display:flex;align-items:center;justify-content:center;transform:scale(.85);transition:transform .2s}
+.card:hover .play-circle{transform:scale(1)}
+.overlay-label{font-size:10px;color:#ccc;text-align:center;padding:0 8px}
+.badge-new{position:absolute;top:7px;left:7px;z-index:2;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:2px;letter-spacing:.5px}
+.badge-hd{position:absolute;top:7px;right:7px;z-index:2;background:rgba(0,0,0,.7);color:#f5c518;font-size:9px;font-weight:700;padding:2px 5px;border-radius:2px;border:1px solid #f5c51866}
+.card-name{font-size:12px;font-weight:600;line-height:1.3}
+.card-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.pop-overlay{position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(transparent,rgba(0,0,0,.92));border-radius:0 0 6px 6px}
+.pop-overlay .card-name{font-size:11px}
+.pop-overlay .card-meta{font-size:10px}
+
+/* placeholder when no image provided */
+.thumb-placeholder{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;color:var(--dim);font-size:10px;text-align:center;padding:8px;
+  background:var(--bg3)
+}
+.thumb-placeholder span{font-size:22px;opacity:.4}
+
+/* SIDEBAR */
+.sidebar{grid-column:2;grid-row:2;background:var(--bg2);border-left:1px solid var(--border);padding:18px 14px;overflow-y:auto;height:calc(100vh - 56px);position:sticky;top:56px}
+.sb-title{font-size:14px;font-weight:700;margin-bottom:12px}
+.sb-section{margin-bottom:22px}
+
+/* trending */
+.t-item{display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;padding:5px;border-radius:5px;transition:background .15s}
+.t-item:hover{background:var(--bg3)}
+.t-num{font-size:20px;font-weight:800;color:var(--dim);min-width:18px;text-align:center;font-family:'Bebas Neue',sans-serif}
+.t-thumb{width:52px;height:38px;border-radius:4px;overflow:hidden;flex-shrink:0;background:var(--bg3);border:1px solid var(--border)}
+.t-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.t-info .t-name{font-size:12px;font-weight:600;line-height:1.3}
+.t-info .t-genre{font-size:10px;color:var(--muted)}
+.rank1 .t-num{color:#f5c518}
+.rank2 .t-num{color:#aaa}
+.rank3 .t-num{color:#cd7f32}
+
+/* categories */
+.cat{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:color .15s}
+.cat:hover{color:var(--red)}
+.cat:last-child{border-bottom:none}
+.cat-l{display:flex;align-items:center;gap:10px;font-size:13px}
+.cat-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+
+/* premium */
+.prem{background:linear-gradient(135deg,#1a0505,#2d0808);border:1px solid #3d1010;border-radius:8px;padding:14px;margin-bottom:16px}
+.prem-logo{font-family:'Bebas Neue',sans-serif;font-size:17px;display:flex;align-items:center;gap:3px;margin-bottom:8px}
+.prem-logo .pr{color:var(--red);font-size:20px}
+.prem p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.btn-prem{display:block;width:100%;background:var(--red);color:#fff;border:none;border-radius:4px;padding:9px;font-size:13px;font-weight:700;text-align:center;cursor:pointer;transition:background .15s,transform .1s}
+.btn-prem:hover{background:var(--red-dark)}
+.btn-prem:active{transform:scale(.98)}
+
+/* social */
+.socials{display:flex;gap:9px}
+.soc{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s,opacity .15s}
+.soc:hover{transform:scale(1.12);opacity:.9}
+.syt{background:#ff0000}.sfb{background:#1877f2}.stg{background:#229ed9}.stt{background:#111;border:1px solid #333}
+
+/* PAGES */
+.page-view{display:none;padding:24px}
+.page-view.active{display:block}
+.page-view h2{font-size:22px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.page-view h2::before{content:'';display:block;width:4px;height:24px;background:var(--red);border-radius:2px}
+.movies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px}
+.genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.genre-card{padding:20px 14px;border-radius:8px;cursor:pointer;text-align:center;transition:transform .15s,opacity .15s;border:1px solid rgba(255,255,255,.08)}
+.genre-card:hover{transform:translateY(-2px);opacity:.9}
+.genre-card .gc-name{font-size:14px;font-weight:700;margin-top:8px}
+.genre-card .gc-count{font-size:11px;opacity:.7;margin-top:2px}
+.mylist-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.mylist-empty svg{opacity:.3;margin-bottom:16px}
+.mylist-empty h3{font-size:18px;margin-bottom:8px;color:var(--text)}
+.mylist-empty p{font-size:13px}
+
+/* toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:13px;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:520px;overflow:hidden;position:relative}
+.modal-hero{height:220px;position:relative;overflow:hidden;background:var(--bg3)}
+.modal-hero img,
+.modal-hero video{width:100%;height:100%;object-fit:cover;display:block}
+.modal-body{padding:20px}
+.modal-close{position:absolute;top:10px;right:10px;z-index:5;width:32px;height:32px;background:rgba(0,0,0,.7);border-radius:50%;border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--red)}
+.modal-title{font-size:22px;font-weight:700;margin-bottom:4px;font-family:'Bebas Neue',sans-serif;letter-spacing:.5px}
+.modal-sub{color:var(--red);font-style:italic;font-size:14px;font-weight:600;margin-bottom:10px}
+.modal-meta{display:flex;gap:12px;font-size:12px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap}
+.modal-meta span{background:var(--bg3);padding:3px 8px;border-radius:4px}
+.modal-desc{font-size:13px;color:#ccc;line-height:1.6;margin-bottom:18px}
+.modal-btns{display:flex;gap:10px}
+
+/* FOOTER */
+.footer{grid-column:1/-1;background:#0a0a0a;border-top:1px solid var(--border)}
+.footer-feats{display:flex;justify-content:center;gap:50px;padding:26px 40px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.ff{display:flex;align-items:flex-start;gap:12px}
+.ff-icon{width:36px;height:36px;border:2px solid var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red)}
+.ff h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.ff p{font-size:11px;color:var(--muted);line-height:1.4;max-width:140px}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding:12px 40px;font-size:11px;color:var(--dim);flex-wrap:wrap;gap:8px}
+.footer-links{display:flex;gap:18px}
+.footer-links a{color:var(--dim);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a class="logo" href="#" onclick="showPage('home');return false">
+    <span class="ib">IF</span> ENTERTAINMENT
+  </a>
+  <div class="nav-links">
+    <a href="#" class="active" id="nav-home"   onclick="showPage('home');return false">Home</a>
+    <a href="#" id="nav-movies"  onclick="showPage('movies');return false">Movies</a>
+    <a href="#" id="nav-series"  onclick="showPage('series');return false">TV Series</a>
+    <a href="#" id="nav-genres"  onclick="showPage('genres');return false">Genres</a>
+    <a href="#" id="nav-mylist"  onclick="showPage('mylist');return false">My List</a>
+  </div>
+  <div class="nav-right">
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Search for movies..." onkeyup="handleSearch(event)">
+      <button class="search-btn" onclick="toggleSearch()" aria-label="Search">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+    </div>
+    <button class="icon-btn" onclick="toggleNotif()" aria-label="Notifications">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-dot" id="notifDot"></span>
+    </button>
+    <button class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar">F</div>
+      <div class="uinfo"><div class="uname">Fred</div><div class="urole">Admin</div></div>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- HOME PAGE -->
+  <div class="page-view active" id="page-home">
+
+    <!-- ── HERO SLIDESHOW ── -->
+    <div class="hero" id="hero"
+      onmousedown="startDrag(event)" onmouseup="endDrag(event)" onmouseleave="endDrag(event)"
+      ontouchstart="touchStart(event)" ontouchend="touchEnd(event)">
+      <div class="slides" id="slides">
+
+        <!-- SLIDE 1 ─ The Equalizer 3 -->
+        <div class="slide">
+          <div class="slide-bg"></div>
+          <div class="slide-art">
+            <!-- TODO: replace with <img src="posters/equalizer3-hero.jpg" alt="The Equalizer 3"> -->
+            <!-- OR:   <video src="trailers/equalizer3-trailer.mp4" autoplay muted loop playsinline></video> -->
+          </div>
+          <div class="slide-overlay"></div>
+          <div class="slide-content">
+            <div class="slide-badge"><span class="n-letter">Fred</span><span>FILM</span></div>
+            <div class="slide-title">THE EQUALIZER 3</div>
+            <div class="slide-sub">(Kinyarwanda)</div>
+            <p class="slide-desc">Robert McCall akomeza urugendo rwe mu kurwanya akarengane no kurinda abacitonge.</p>
+            <div class="hero-btns">
+              <button class="btn-play" onclick="openModal(0)">
+                <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Play Now
+              </button>
+              <button class="btn-list" onclick="addToList('The Equalizer 3',0)">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> My List
+              </button>
+              <button class="btn-info" onclick="openModal(0)">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> More Info
+              </button>
+            </div>
+            <div class="hero-credit">Translated by <span class="cr">Fred</span> | <span class="cr">IF Entertainment</span></div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2 ─ John Wick 4 -->
+        <div class="slide">
+          <div class="slide-bg"></div>
+          <div class="slide-art">
+            <!-- TODO: replace with <img src="posters/johnwick4-hero.jpg" alt="John Wick 4"> -->
+            <!-- OR:   <video src="trailers/johnwick4-trailer.mp4" autoplay muted loop playsinline></video> -->
+          </div>
+          <div class="slide-overlay"></div>
+          <div class="slide-content">
+            <div class="slide-badge"><span class="n-letter">Fred</span><span>FILM</span></div>
+            <div class="slide-title">JOHN WICK 4</div>
+            <div class="slide-sub">(Kinyarwanda)</div>
+            <p class="slide-desc">John Wick avumbura inzira yo gutsinda Ishyirahamwe maze agomba kurwana n'inshuti nshya.</p>
+            <div class="hero-btns">
+              <button class="btn-play" onclick="openModal(1)">
+                <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Play Now
+              </button>
+              <button class="btn-list" onclick="addToList('John Wick 4',1)">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> My List
+              </button>
+              <button class="btn-info" onclick="openModal(1)">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> More Info
+              </button>
+            </div>
+            <div class="hero-credit">Translated by <span class="cr">Fred</span> | <span class="cr">IF Entertainment</span></div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3 ─ Fast X -->
+        <div class="slide">
+          <div class="slide-bg"></div>
+          <div class="slide-art">
+            <!-- TODO: replace with <img src="posters/fastx-hero.jpg" alt="Fast X"> -->
+            <!-- OR:   <video src="trailers/fastx-trailer.mp4" autoplay muted loop playsinline></video> -->
+          </div>
+          <div class="slide-overlay"></div>
+          <div class="slide-content">
+            <div class="slide-badge"><span class="n-letter">Fred</span><span>FILM</span></div>
+            <div class="slide-title">FAST X</div>
+            <div class="slide-sub">(Kinyarwanda)</div>
+            <p class="slide-desc">Dominic Toretto n'umuryango we bashoboye guhangana n'umwanzi mushya ufite imbaraga nyinshi.</p>
+            <div class="hero-btns">
+              <button class="btn-play" onclick="openModal(2)">
+                <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Play Now
+              </button>
+              <button class="btn-list" onclick="addToList('Fast X',2)">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> My List
+              </button>
+              <button class="btn-info" onclick="openModal(2)">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> More Info
+              </button>
+            </div>
+            <div class="hero-credit">Translated by <span class="cr">Fred</span> | <span class="cr">IF Entertainment</span></div>
+          </div>
+        </div>
+
+      </div><!-- /slides -->
+
+      <button class="hero-nav prev" onclick="prevSlide()" aria-label="Previous">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="hero-nav next" onclick="nextSlide()" aria-label="Next">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="hero-dots" id="heroDots">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+        <div class="dot" onclick="goSlide(2)"></div>
+      </div>
+      <div class="hero-progress" id="heroProgress" style="width:0%"></div>
+    </div><!-- /hero -->
+
+    <!-- ── SECTIONS ── -->
+    <div class="content">
+
+      <!-- New Releases -->
+      <div class="section">
+        <div class="sec-head">
+          <div class="sec-title">New Releases</div>
+          <a href="#" class="view-all" onclick="showPage('movies');return false">View All
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+        <div class="row-wrap">
+          <div class="movie-row" id="row-new"></div>
+          <button class="row-btn rb-left"  onclick="scrollRow('row-new',-1)" aria-label="Scroll left"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="row-btn rb-right" onclick="scrollRow('row-new', 1)" aria-label="Scroll right"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Popular -->
+      <div class="section">
+        <div class="sec-head">
+          <div class="sec-title">Popular on IF Entertainment</div>
+          <a href="#" class="view-all" onclick="showPage('movies');return false">View All
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+        <div class="row-wrap">
+          <div class="movie-row" id="row-pop"></div>
+          <button class="row-btn rb-left"  onclick="scrollRow('row-pop',-1)" aria-label="Scroll left"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="row-btn rb-right" onclick="scrollRow('row-pop', 1)" aria-label="Scroll right"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Recently Added -->
+      <div class="section">
+        <div class="sec-head">
+          <div class="sec-title">Recently Added</div>
+          <a href="#" class="view-all" onclick="showPage('movies');return false">View All
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+        <div class="row-wrap">
+          <div class="movie-row" id="row-recent"></div>
+          <button class="row-btn rb-left"  onclick="scrollRow('row-recent',-1)" aria-label="Scroll left"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="row-btn rb-right" onclick="scrollRow('row-recent', 1)" aria-label="Scroll right"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /page-home -->
+
+  <!-- MOVIES PAGE -->
+  <div class="page-view" id="page-movies">
+    <h2>All Movies</h2>
+    <div class="movies-grid" id="moviesGrid"></div>
+  </div>
+
+  <!-- TV SERIES PAGE -->
+  <div class="page-view" id="page-series">
+    <h2>TV Series</h2>
+    <div class="movies-grid" id="seriesGrid"></div>
+  </div>
+
+  <!-- GENRES PAGE -->
+  <div class="page-view" id="page-genres">
+    <h2>Browse by Genre</h2>
+    <div class="genre-grid" id="genresGrid"></div>
+  </div>
+
+  <!-- MY LIST PAGE -->
+  <div class="page-view" id="page-mylist">
+    <h2>My List</h2>
+    <div id="mylistContent"></div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+
+  <div class="sb-section">
+    <div class="sb-title">Trending Now</div>
+    <div id="trendingList"></div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-title">Categories</div>
+    <div id="catList"></div>
+  </div>
+
+  <div class="prem">
+    <div class="prem-logo"><span class="pr">IF</span> ENTERTAINMENT</div>
+    <p>Watch unlimited Kinyarwanda translated movies anytime, anywhere.</p>
+    <button class="btn-prem" onclick="showToast('Opening Premium plans...')">Go Premium</button>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-title">Stay Connected</div>
+    <div class="socials">
+      <div class="soc syt" onclick="showToast('Opening YouTube...')" title="YouTube">
+        <svg width="15" height="15" fill="white" viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+      </div>
+      <div class="soc sfb" onclick="showToast('Opening Facebook...')" title="Facebook">
+        <svg width="15" height="15" fill="white" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </div>
+      <div class="soc stg" onclick="showToast('Opening Telegram...')" title="Telegram">
+        <svg width="15" height="15" fill="white" viewBox="0 0 24 24"><path d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-16.5 7.067a2 2 0 0 0 .048 3.675l3.63 1.39L9.5 18.5l2.35-1.94L14 18.5V15l7-8.5-8.375 5.906L9.5 11l10.4-8.575a2.01 2.01 0 0 1 1.298-.992z"/></svg>
+      </div>
+      <div class="soc stt" onclick="showToast('Opening TikTok...')" title="TikTok">
+        <svg width="15" height="15" fill="white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.35a8.16 8.16 0 0 0 4.77 1.52V7.42a4.85 4.85 0 0 1-1-.73z"/></svg>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /sidebar -->
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer">
+  <div class="footer-feats">
+    <div class="ff">
+      <div class="ff-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
+      </div>
+      <div><h4>High Quality</h4><p>Enjoy movies in HD quality.</p></div>
+    </div>
+    <div class="ff">
+      <div class="ff-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+      </div>
+      <div><h4>Easy Upload</h4><p>We make it simple to upload and manage.</p></div>
+    </div>
+    <div class="ff">
+      <div class="ff-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <div><h4>Watch Anywhere</h4><p>On phone, tablet, laptop and TV.</p></div>
+    </div>
+    <div class="ff">
+      <div class="ff-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div><h4>Secure &amp; Private</h4><p>Your content is safe with us.</p></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2024 IF Entertainment. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#" onclick="showToast('About Us');return false">About Us</a>
+      <a href="#" onclick="showToast('Contact');return false">Contact</a>
+      <a href="#" onclick="showToast('Privacy Policy');return false">Privacy Policy</a>
+      <a href="#" onclick="showToast('Terms of Use');return false">Terms of Use</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-hero" id="modalHero">
+      <!-- TODO: replace with <img src="..." alt="..."> or <video ...> for the modal banner -->
+    </div>
+    <button class="modal-close" onclick="closeModal()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-body">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-sub"   id="modalSub"></div>
+      <div class="modal-meta"  id="modalMeta"></div>
+      <div class="modal-desc"  id="modalDesc"></div>
+      <div class="modal-btns">
+        <button class="btn-play" id="modalPlay">
+          <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Play Now
+        </button>
+        <button class="btn-list" id="modalList">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> My List
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+// Each movie has an optional `poster` field for <img src="..."> and `video` for <video src="...">
+const MOVIES = [
+  {id:0, title:'The Equalizer 3',           sub:'(Kinyarwanda)', year:'2023', genre:'Action',          isNew:true,  isHD:true,
+   /* poster:'images/equalizer3.jpg', video:'videos/equalizer3.mp4' */ desc:'Robert McCall akomeza urugendo rwe mu kurwanya akarengane no kurinda abacitonge.'},
+  {id:1, title:'John Wick 4',               sub:'(Kinyarwanda)', year:'2023', genre:'Action, Thriller', isNew:true,  isHD:true,
+   /* poster:'images/johnwick4.jpg' */       desc:'John Wick avumbura inzira yo gutsinda Ishyirahamwe.'},
+  {id:2, title:'Fast X',                    sub:'(Kinyarwanda)', year:'2023', genre:'Action',          isNew:true,  isHD:true,
+   /* poster:'images/fastx.jpg' */           desc:'Dominic Toretto n\'umuryango we bashoboye guhangana n\'umwanzi mushya.'},
+  {id:3, title:'Mission: Impossible Dead Reckoning', year:'2023', genre:'Action', isNew:true, isHD:true,
+   /* poster:'images/mi7.jpg' */             desc:'Ethan Hunt agomba kurinda intwaro inoguye mu maboko y\'inzirakarengane.'},
+  {id:4, title:'Oppenheimer',               year:'2023', genre:'Drama',          isNew:true,  isHD:false,
+   /* poster:'images/oppenheimer.jpg' */     desc:'Inzira y\'umuhanga waremye ikirangaminsi cy\'isi.'},
+  {id:5, title:'The Little Mermaid',        year:'2023', genre:'Adventure',      isNew:true,  isHD:true,
+   /* poster:'images/littlemermaid.jpg' */   desc:'Ariel, inzoli ikunda isi y\'abantu, ashaka urukundo rwe.'},
+  {id:6, title:'Extraction 2',              year:'2023', genre:'Action',          isHD:true,
+   /* poster:'images/extraction2.jpg' */     desc:'Tyler Rake agaruka mu rugendo rwe rw\'inzira ya mato.'},
+  {id:7, title:'Avengers Endgame',          year:'2019', genre:'Action',          isHD:true,
+   /* poster:'images/endgame.jpg' */         desc:'Intsinzi ya nyuma yo gusubiza ababuriye.'},
+  {id:8, title:'Joker',                     year:'2019', genre:'Crime',           isHD:true,
+   /* poster:'images/joker.jpg' */           desc:'Arthur Fleck ahinduka umuntu uzwi nka Joker.'},
+  {id:9, title:'Interstellar',              year:'2014', genre:'Sci-Fi',          isHD:true,
+   /* poster:'images/interstellar.jpg' */    desc:'Ingendo mu kirere gito yo gushaka isi nshya.'},
+  {id:10,title:'The Dark Knight',           year:'2008', genre:'Action',          isHD:true,
+   /* poster:'images/darkknight.jpg' */      desc:'Batman arwana na Joker uzamuye imitima y\'abaturage ba Gotham.'},
+  {id:11,title:'The Nun II',                year:'2023', genre:'Horror',          isHD:false,
+   /* poster:'images/nun2.jpg' */            desc:'Valak agaruka ntaruhuka.'},
+  {id:12,title:'This is 40',               year:'2012', genre:'Comedy',          isHD:false,
+   /* poster:'images/thisis40.jpg' */        desc:'Ubuzima bw\'abantu bafite imyaka 40 n\'ibibazo byabo.'},
+  {id:13,title:'The Meg 2',                year:'2023', genre:'Action',          isHD:true,
+   /* poster:'images/meg2.jpg' */            desc:'Ingendo ya kabiri mu nzitizi z\'inyanja nkuru.'},
+  {id:14,title:'Transformers: Rise of the Beasts', year:'2023', genre:'Action',  isHD:true,
+   /* poster:'images/transformers7.jpg' */   desc:'Transformers n\'Maximals bakorana kurinda isi.'},
+  {id:15,title:'Elemental',                year:'2023', genre:'Animation',       isHD:true,
+   /* poster:'images/elemental.jpg' */       desc:'Amazi n\'umuriro bakundana mu mujyi w\'ibikoresho.'},
+  {id:16,title:'The Lion King',            year:'2019', genre:'Animation',       isHD:true,
+   /* poster:'images/lionking.jpg' */        desc:'Simba agaruka gutwara ubwami bwe.'},
+  {id:17,title:'Black Panther 2',          year:'2022', genre:'Action',          isHD:true,
+   /* poster:'images/blackpanther2.jpg' */   desc:'Wakanda bagomba kurinda igihugu cya ba sogokuruza.'},
+];
+
+const SERIES = [
+  {id:100,title:'Stranger Things 4', year:'2022', genre:'Sci-Fi',  isHD:true,  /* poster:'images/st4.jpg' */     desc:'Groupe ya Hawkins irwana n\'ibiremwa bishya.'},
+  {id:101,title:'The Witcher S3',    year:'2023', genre:'Fantasy', isHD:true,  /* poster:'images/witcher3.jpg' */ desc:'Geralt, Yennefer na Ciri bari mu makuba mashya.'},
+  {id:102,title:'Wednesday',         year:'2022', genre:'Comedy',  isHD:true,  /* poster:'images/wednesday.jpg' */desc:'Wednesday Addams agera mu ishuri rishya.'},
+  {id:103,title:'Squid Game',        year:'2021', genre:'Thriller',isHD:true,  /* poster:'images/squidgame.jpg' */desc:'Abantu bagombaga amafaranga barwana gushaka ubuzima.'},
+  {id:104,title:'Breaking Bad',      year:'2013', genre:'Crime',   isHD:true,  /* poster:'images/breakingbad.jpg'*/desc:'Umwarimu wa chimie ahinduka umukora wa drogue.'},
+];
+
+const GENRES = [
+  {name:'Action',      count:45, color:'#e50914', bg:'#2d0505'},
+  {name:'Comedy',      count:32, color:'#44cc44', bg:'#052d05'},
+  {name:'Drama',       count:38, color:'#4488ff', bg:'#05052d'},
+  {name:'Horror',      count:22, color:'#aa44ff', bg:'#15052d'},
+  {name:'Romance',     count:28, color:'#ff4499', bg:'#2d0514'},
+  {name:'Thriller',    count:19, color:'#cccc00', bg:'#1a1a00'},
+  {name:'Animation',   count:15, color:'#00aaff', bg:'#001a2d'},
+  {name:'Documentary', count:12, color:'#888888', bg:'#1a1a1a'},
+  {name:'Sci-Fi',      count:17, color:'#00ffcc', bg:'#001a14'},
+  {name:'Adventure',   count:24, color:'#ff8800', bg:'#1a0c00'},
+];
+
+const TRENDING = [
+  {id:0,  genre:'Action, Crime'},
+  {id:1,  genre:'Action, Thriller'},
+  {id:2,  genre:'Action, Adventure'},
+  {id:16, genre:'Animation, Family'},
+  {id:11, genre:'Horror, Mystery'},
+];
+
+let myList = [];
+let currentSlide = 0;
+let progressTimer = null;
+let progressVal   = 0;
+let dragX = 0;
+
+// ═══ CARD BUILDER ═══
+function makeThumb(m, isPopular) {
+  const img = m.poster
+    ? `<!-- movie poster image -->
+       <img src="${m.poster}" alt="${m.title}">`
+    : `<!-- TODO: <img src="images/${m.id}.jpg" alt="${m.title}"> -->
+       <div class="thumb-placeholder"><span>🎬</span>${m.title}</div>`;
+
+  const newBadge = m.isNew ? '<div class="badge-new">NEW</div>' : '';
+  const hdBadge  = m.isHD  ? '<div class="badge-hd">HD</div>'  : '';
+  const overlay  = isPopular
+    ? `<div class="c-overlay"><div class="play-circle"><svg width="14" height="14" fill="white" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+       <div class="pop-overlay"><div class="card-name">${m.title}</div><div class="card-meta">${m.year} · ${m.genre}</div></div>`
+    : `<div class="c-overlay"><div class="play-circle"><svg width="14" height="14" fill="white" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>`;
+
+  return `<div class="thumb">${img}${newBadge}${hdBadge}${overlay}</div>`;
+}
+
+function makeCard(m, isLarge=false, isPopular=false) {
+  const lg = isLarge ? ' lg' : '';
+  const meta = isPopular ? '' : `<div class="card-name">${m.title}</div><div class="card-meta">${m.year||''} · ${m.genre}</div>`;
+  return `<div class="card${lg}" onclick="openModal(${m.id})">${makeThumb(m, isPopular)}${meta}</div>`;
+}
+
+// ═══ RENDER ROWS ═══
+function renderRows() {
+  const newMovies = MOVIES.filter(m => m.isNew);
+  const popular   = [6,7,8,9,10,17].map(i => MOVIES[i]);
+  const recent    = [11,12,13,14,15,16].map(i => MOVIES[i]);
+  document.getElementById('row-new').innerHTML    = newMovies.map(m => makeCard(m)).join('');
+  document.getElementById('row-pop').innerHTML    = popular.map(m => makeCard(m, true, true)).join('');
+  document.getElementById('row-recent').innerHTML = recent.map(m => makeCard(m)).join('');
+}
+
+function renderMoviesPage(list) {
+  list = list || MOVIES;
+  document.getElementById('moviesGrid').innerHTML = list.map(m => makeCard(m)).join('');
+}
+
+function renderSeriesPage() {
+  document.getElementById('seriesGrid').innerHTML = SERIES.map(m => makeCard(m)).join('');
+}
+
+function renderGenresPage() {
+  document.getElementById('genresGrid').innerHTML = GENRES.map(g => `
+    <div class="genre-card" style="background:${g.bg};border-color:${g.color}33" onclick="filterGenre('${g.name}')">
+      <div style="font-size:26px;color:${g.color};opacity:.8">●</div>
+      <div class="gc-name" style="color:${g.color}">${g.name}</div>
+      <div class="gc-count">${g.count} titles</div>
+    </div>`).join('');
+}
+
+function filterGenre(name) {
+  showPage('movies');
+  const filtered = MOVIES.filter(m => m.genre.includes(name));
+  renderMoviesPage(filtered);
+  document.querySelector('#page-movies h2').textContent = name + ' Movies';
+  showToast('Showing ' + name + ' movies');
+}
+
+function renderTrending() {
+  document.getElementById('trendingList').innerHTML = TRENDING.map((t, i) => {
+    const m = MOVIES.find(x => x.id === t.id) || {};
+    const rankClass = ['rank1','rank2','rank3'][i] || '';
+    const thumbContent = m.poster
+      ? `<!-- TODO: <img src="${m.poster}" alt="${m.title}"> -->
+         <div style="width:52px;height:38px;background:var(--bg3)"></div>`
+      : `<!-- TODO: <img src="images/${m.id}.jpg" alt="${m.title}"> -->
+         <div style="width:52px;height:38px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--dim);text-align:center;padding:2px">${m.title||''}</div>`;
+    return `<div class="t-item ${rankClass}" onclick="openModal(${t.id})">
+      <div class="t-num">${i+1}</div>
+      <div class="t-thumb">${thumbContent}</div>
+      <div class="t-info"><div class="t-name">${m.title||''}</div><div class="t-genre">${t.genre}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderCategories() {
+  const icons = {Action:'⚡',Comedy:'😄',Drama:'🎭',Horror:'👻',Romance:'❤️',Thriller:'🔪',Animation:'⭐',Documentary:'🌍'};
+  const bgs   = {Action:'#3d1010',Comedy:'#103d10',Drama:'#10103d',Horror:'#2d102d',Romance:'#3d1022',Thriller:'#3d3d10',Animation:'#10203d',Documentary:'#252525'};
+  document.getElementById('catList').innerHTML = GENRES.slice(0,8).map(g => `
+    <div class="cat" onclick="filterGenre('${g.name}')">
+      <div class="cat-l">
+        <div class="cat-icon" style="background:${bgs[g.name]||'#252525'}">${icons[g.name]||'🎬'}</div>
+        ${g.name}
+      </div>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`).join('');
+}
+
+function renderMyList() {
+  const el = document.getElementById('mylistContent');
+  if (myList.length === 0) {
+    el.innerHTML = `<div class="mylist-empty">
+      <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <h3>Your list is empty</h3>
+      <p>Browse movies and click "+ My List" to save titles here.</p>
+    </div>`;
+  } else {
+    el.innerHTML = `<div class="movies-grid">${myList.map(m => makeCard(m)).join('')}</div>`;
+  }
+}
+
+// ═══ NAV ═══
+function showPage(name) {
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('nav-'  + name).classList.add('active');
+  if (name === 'movies') renderMoviesPage();
+  if (name === 'series') renderSeriesPage();
+  if (name === 'genres') renderGenresPage();
+  if (name === 'mylist') renderMyList();
+  if (name !== 'home')   window.scrollTo(0, 0);
+}
+
+// ═══ SLIDESHOW ═══
+function goSlide(n) {
+  currentSlide = (n + 3) % 3;
+  document.getElementById('slides').style.transform = `translateX(-${currentSlide * 100 / 3}%)`;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+  resetProgress();
+}
+function nextSlide() { goSlide(currentSlide + 1); }
+function prevSlide() { goSlide(currentSlide - 1); }
+
+function resetProgress() {
+  clearInterval(progressTimer);
+  progressVal = 0;
+  const bar = document.getElementById('heroProgress');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  setTimeout(() => {
+    bar.style.transition = 'width .1s linear';
+    progressTimer = setInterval(() => {
+      progressVal += 0.333;
+      if (progressVal >= 100) { progressVal = 0; nextSlide(); }
+      bar.style.width = progressVal + '%';
+    }, 100);
+  }, 50);
+}
+
+// drag/swipe
+function startDrag(e) { dragX = e.clientX; }
+function endDrag(e)   { const d = e.clientX - dragX; if (Math.abs(d) > 50) d < 0 ? nextSlide() : prevSlide(); }
+let touchX = 0;
+function touchStart(e) { touchX = e.touches[0].clientX; }
+function touchEnd(e)   { const d = e.changedTouches[0].clientX - touchX; if (Math.abs(d) > 40) d < 0 ? nextSlide() : prevSlide(); }
+
+// ═══ ROW SCROLL ═══
+function scrollRow(id, dir) {
+  document.getElementById(id).scrollBy({ left: dir * 450, behavior: 'smooth' });
+}
+
+// ═══ MODAL ═══
+function openModal(id) {
+  const m = [...MOVIES, ...SERIES].find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('modalTitle').textContent = m.title;
+  document.getElementById('modalSub').textContent   = m.sub || '(Kinyarwanda)';
+  document.getElementById('modalMeta').innerHTML    =
+    `<span>${m.year||'2023'}</span><span>${m.genre}</span>${m.isHD ? '<span>HD</span>' : ''}`;
+  document.getElementById('modalDesc').textContent  = m.desc || 'Iyi filimi ni nziza cyane.';
+
+  // Modal hero: img or video comment placeholder
+  const heroEl = document.getElementById('modalHero');
+  if (m.poster) {
+    heroEl.innerHTML = `<!-- movie banner image -->
+      <img src="${m.poster}" alt="${m.title}" style="width:100%;height:220px;object-fit:cover">`;
+  } else {
+    heroEl.innerHTML = `<!-- TODO: <img src="images/${m.id}-banner.jpg" alt="${m.title}"> -->
+      <div style="width:100%;height:220px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--dim)">🎬 ${m.title}</div>`;
+  }
+
+  document.getElementById('modalPlay').onclick = () => { closeModal(); showToast('▶ Playing: ' + m.title); };
+  document.getElementById('modalList').onclick = () => { addToList(m.title, id); closeModal(); };
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('modalBg')) closeModal(); }
+
+// ═══ MY LIST ═══
+function addToList(titleOrId, id) {
+  const m = (typeof titleOrId === 'string' && id === undefined)
+    ? MOVIES.find(x => x.title === titleOrId)
+    : [...MOVIES, ...SERIES].find(x => x.id === id);
+  if (!m) return;
+  const exists = myList.find(x => x.id === m.id);
+  if (exists) {
+    myList = myList.filter(x => x.id !== m.id);
+    showToast('Removed from My List: ' + m.title);
+  } else {
+    myList.push(m);
+    showToast('✓ Added to My List: ' + m.title);
+  }
+  document.getElementById('nav-mylist').textContent =
+    myList.length > 0 ? `My List (${myList.length})` : 'My List';
+}
+
+// ═══ SEARCH ═══
+function toggleSearch() {
+  const inp = document.getElementById('searchInput');
+  inp.classList.toggle('open');
+  if (inp.classList.contains('open')) inp.focus(); else inp.value = '';
+}
+function handleSearch(e) {
+  const q = e.target.value.trim().toLowerCase();
+  if (e.key === 'Enter' && q) {
+    const results = MOVIES.filter(m => m.title.toLowerCase().includes(q));
+    showPage('movies');
+    if (results.length) {
+      renderMoviesPage(results);
+      document.querySelector('#page-movies h2').textContent = `Search: "${q}"`;
+    } else {
+      document.getElementById('moviesGrid').innerHTML =
+        `<p style="color:var(--muted);padding:20px">No results found for "${q}"</p>`;
+    }
+    document.getElementById('searchInput').classList.remove('open');
+    document.getElementById('searchInput').value = '';
+  }
+}
+
+// ═══ NOTIFICATIONS / USER ═══
+function toggleNotif()    { document.getElementById('notifDot').style.display = 'none'; showToast('No new notifications'); }
+function toggleUserMenu() { showToast('Fred — Admin Account'); }
+
+// ═══ TOAST ═══
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ═══ INIT ═══
+renderRows();
+renderTrending();
+renderCategories();
+resetProgress();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft')  prevSlide();
+  if (e.key === 'Escape')     closeModal();
+});
+</script>
+</body>
+</html>
